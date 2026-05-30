@@ -23,8 +23,23 @@ from pdf_export import generate_report_pdf
 load_dotenv()
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
-STATIC_DIR = os.path.join(BASE_DIR, '..', 'frontend', 'dist')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Support explicit override via env var, otherwise try relative path
+_env_static = os.getenv("STATIC_DIR")
+if _env_static:
+    STATIC_DIR = _env_static
+else:
+    # Try ../frontend/dist (when root dir = backend)
+    _candidate1 = os.path.join(BASE_DIR, '..', 'frontend', 'dist')
+    # Try ./frontend/dist (when root dir = repo root)
+    _candidate2 = os.path.join(BASE_DIR, 'frontend', 'dist')
+    if os.path.exists(_candidate1):
+        STATIC_DIR = os.path.normpath(_candidate1)
+    elif os.path.exists(_candidate2):
+        STATIC_DIR = os.path.normpath(_candidate2)
+    else:
+        STATIC_DIR = os.path.normpath(_candidate1)  # default, will show clear error
 
 app = Flask(__name__, static_folder=STATIC_DIR, static_url_path='')
 CORS(app, supports_credentials=True)
