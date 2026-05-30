@@ -1,0 +1,13 @@
+flask
+flask-cors
+flask-jwt-extended
+flask-limiter
+psycopg2-binary
+python-dotenv
+pymupdf
+pdfplumber
+groq
+pillow
+reportlab
+werkzeug
+gunicorn

@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #f5f5f4;
+  --surface:  #ffffff;
+  --surface2: #fafaf9;
+  --border:   #e7e5e4;
+  --border2:  #d6d3d1;
+
+  --text:     #1c1917;
+  --text2:    #44403c;
+  --muted:    #78716c;
+  --muted2:   #a8a29e;
+
+  --primary:       #0f766e;
+  --primary-dark:  #0d6b63;
+  --primary-light: #f0fdfa;
+  --primary-glow:  rgba(15,118,110,0.12);
+
+  --green:         #15803d;
+  --green-bg:      #f0fdf4;
+  --green-border:  #bbf7d0;
+  --orange:        #c2410c;
+  --orange-bg:     #fff7ed;
+  --orange-border: #fed7aa;
+  --red:           #b91c1c;
+  --red-bg:        #fef2f2;
+  --red-border:    #fecaca;
+  --blue:          #1d4ed8;
+  --blue-bg:       #eff6ff;
+  --blue-border:   #bfdbfe;
+  --gray-bg:       #f5f5f4;
+  --gray-border:   #e7e5e4;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow:    0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.09);
+
+  --r-sm:   4px;
+  --r:      8px;
+  --r-lg:   12px;
+  --r-xl:   16px;
+  --r-full: 9999px;
+
+  --t-fast: 0.12s ease;
+  --t:      0.2s ease;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  font-size: 15px;
+}
+
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+a { text-decoration: none; color: inherit; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+
+/* Minimal animations — only what's needed */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in    { animation: fadeIn 0.25s ease both; }
+.animate-fade-in-up { animation: fadeIn 0.3s ease both; }
+.animate-scale-in   { animation: fadeIn 0.25s ease both; }
+.animate-slide-left { animation: fadeIn 0.25s ease both; }

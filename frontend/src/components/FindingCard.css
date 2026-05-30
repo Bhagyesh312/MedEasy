@@ -1,0 +1,89 @@
+.finding-card {
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  background: white;
+  margin-bottom: 6px;
+  overflow: hidden;
+  transition: border-color var(--t-fast);
+  animation: fadeIn 0.25s ease both;
+}
+.finding-card:hover { border-color: var(--border2); }
+
+.finding-card.normal   { border-left-color: var(--green);  }
+.finding-card.high     { border-left-color: var(--orange); }
+.finding-card.low      { border-left-color: var(--blue);   }
+.finding-card.critical { border-left-color: var(--red);    }
+.finding-card.unknown  { border-left-color: var(--muted2); }
+
+/* Header */
+.finding-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; cursor: pointer; user-select: none;
+}
+
+.finding-icon-wrap {
+  width: 28px; height: 28px; border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.finding-card.normal   .finding-icon-wrap { background: var(--green-bg);  color: var(--green);  }
+.finding-card.high     .finding-icon-wrap { background: var(--orange-bg); color: var(--orange); }
+.finding-card.low      .finding-icon-wrap { background: var(--blue-bg);   color: var(--blue);   }
+.finding-card.critical .finding-icon-wrap { background: var(--red-bg);    color: var(--red);    }
+.finding-card.unknown  .finding-icon-wrap { background: var(--bg);        color: var(--muted);  }
+
+.finding-title-group { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.finding-name {
+  font-size: 0.87rem; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.finding-value-inline { font-size: 0.75rem; color: var(--muted); }
+
+.finding-badge {
+  font-size: 0.65rem; font-weight: 700; padding: 2px 8px;
+  border-radius: var(--r); text-transform: uppercase;
+  letter-spacing: 0.4px; white-space: nowrap; flex-shrink: 0;
+}
+.finding-badge.normal   { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green-border);  }
+.finding-badge.high     { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+.finding-badge.low      { background: var(--blue-bg);   color: var(--blue);   border: 1px solid var(--blue-border);   }
+.finding-badge.critical { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red-border);    }
+.finding-badge.unknown  { background: var(--bg);        color: var(--muted);  border: 1px solid var(--border);        }
+
+.finding-toggle { color: var(--muted2); display: flex; align-items: center; flex-shrink: 0; }
+
+/* Body */
+.finding-body {
+  padding: 0 14px 14px 52px;
+  display: flex; flex-direction: column; gap: 8px;
+  border-top: 1px solid var(--border); padding-top: 10px;
+}
+
+.finding-ref-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.finding-ref-label {
+  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--muted2);
+}
+.finding-ref-value {
+  font-size: 0.77rem; font-weight: 500; color: var(--text2);
+  background: var(--bg); padding: 1px 8px;
+  border-radius: var(--r); border: 1px solid var(--border);
+}
+
+.finding-explanation { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+
+.finding-action {
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 8px 10px; background: var(--bg);
+  border-radius: var(--r-sm); border: 1px solid var(--border);
+}
+.action-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--primary); flex-shrink: 0; margin-top: 7px;
+}
+.finding-action span { font-size: 0.8rem; color: var(--text2); font-style: italic; line-height: 1.5; }
+
+@media (max-width: 480px) {
+  .finding-body { padding-left: 14px; }
+  .finding-badge { display: none; }
+}
