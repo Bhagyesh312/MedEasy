@@ -61,9 +61,6 @@ export default function FindingCard({ finding, index = 0 }) {
             <div className="finding-ref-row">
               <span className="finding-ref-label">Reference Range</span>
               <span className="finding-ref-value">{finding.reference_range}</span>
-              {finding.your_number_context && (
-                <span className="finding-context">{finding.your_number_context}</span>
-              )}
             </div>
           )}
 

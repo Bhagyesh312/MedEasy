@@ -123,7 +123,6 @@ def _parse_json(raw: str) -> list:
                 "reference_range":    str(item.get("reference_range", "Not specified")),
                 "status":             status,
                 "what_it_measures":   str(item.get("what_it_measures", "")),
-                "your_number_context":str(item.get("your_number_context", "")),
                 "explanation":        str(item.get("explanation", "")),
                 "symptoms":           item.get("symptoms", []) if isinstance(item.get("symptoms"), list) else [],
                 "urgency":            str(item.get("urgency", "Routine")),
@@ -144,32 +143,25 @@ def analyse_text_report(report_text: str, lang: str = "en") -> list:
 
     messages = [
         {"role": "system", "content": sys_prompt},
-        {"role": "user", "content": f"""Analyse this medical lab report and return ONLY a valid JSON array. {lang_instr}
+        {"role": "user", "content": f"""Analyse this medical lab report. Return ONLY a valid JSON array. {lang_instr}
 
 Report:
 {report_text}
 
-Each item must have these exact fields:
-- "test": test name in English (string)
-- "value": result with unit (string)
-- "reference_range": normal range from report, or "Not specified" (string)
-- "status": one of "Normal", "High", "Low", "Critical", "Unknown" — always in English (string)
-- "what_it_measures": 1 short sentence — what does this test check in the body? (string, in requested language)
-- "your_number_context": how far from normal, e.g. "1.6x above upper limit" or "within range" (string, in English)
-- "explanation": 1-2 SHORT sentences — what does this result mean for the patient? No medical jargon. (string, in requested language)
-- "symptoms": list of 2-3 symptoms this abnormal value can cause. Empty list [] if Normal. (array of strings, in requested language)
-- "urgency": one of "Routine", "Soon (1-2 weeks)", "Urgent (today)" — always in English (string)
-- "likely_next_step": 1 sentence — what will the doctor probably do? (string, in requested language)
-- "action": 1 short sentence — what should the patient do right now? (string, in requested language)
-- "flag": true if needs attention, false if Normal (boolean)
+Each item must have:
+- "test": test name in English
+- "value": result with unit
+- "reference_range": normal range or "Not specified"
+- "status": "Normal", "High", "Low", "Critical", or "Unknown" (English only)
+- "what_it_measures": 1 sentence — what does this test check? (requested language)
+- "explanation": 1-2 SHORT sentences — what does this result mean for the patient? (requested language)
+- "symptoms": array of 2-3 symptoms if abnormal, empty array [] if Normal (requested language)
+- "urgency": "Routine", "Soon (1-2 weeks)", or "Urgent (today)" (English only)
+- "likely_next_step": 1 short sentence — what will the doctor do? (requested language)
+- "action": 1 short sentence — what should the patient do? (requested language)
+- "flag": true if abnormal, false if Normal
 
-Rules:
-- Keep ALL text fields SHORT — max 1-2 sentences each
-- No paragraphs, no long explanations
-- symptoms must be a JSON array, not a string
-- urgency for Normal values must always be "Routine"
-
-Return ONLY the JSON array. No markdown, no code blocks, no extra text."""}
+Keep all text fields to 1-2 sentences max. Return ONLY the JSON array."""}
     ]
     raw = _call_with_fallback(messages)
     return _parse_json(raw)
