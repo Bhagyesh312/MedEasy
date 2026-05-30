@@ -118,13 +118,18 @@ def _parse_json(raw: str) -> list:
                 flag = False
 
             normalized.append({
-                "test": str(item.get("test", "Unknown")),
-                "value": str(item.get("value", "N/A")),
-                "reference_range": str(item.get("reference_range", "Not specified")),
-                "status": status,
-                "explanation": str(item.get("explanation", "")),
-                "action": str(item.get("action", "")),
-                "flag": flag
+                "test":               str(item.get("test", "Unknown")),
+                "value":              str(item.get("value", "N/A")),
+                "reference_range":    str(item.get("reference_range", "Not specified")),
+                "status":             status,
+                "what_it_measures":   str(item.get("what_it_measures", "")),
+                "your_number_context":str(item.get("your_number_context", "")),
+                "explanation":        str(item.get("explanation", "")),
+                "symptoms":           item.get("symptoms", []) if isinstance(item.get("symptoms"), list) else [],
+                "urgency":            str(item.get("urgency", "Routine")),
+                "likely_next_step":   str(item.get("likely_next_step", "")),
+                "action":             str(item.get("action", "")),
+                "flag":               flag
             })
         return normalized
     except Exception:
@@ -144,14 +149,25 @@ def analyse_text_report(report_text: str, lang: str = "en") -> list:
 Report:
 {report_text}
 
-Each item must have:
-- "test": test name (string, keep in English)
+Each item must have these exact fields:
+- "test": test name in English (string)
 - "value": result with unit (string)
 - "reference_range": normal range from report, or "Not specified" (string)
-- "status": one of "Normal", "High", "Low", "Critical", "Unknown" (always in English)
-- "explanation": 2-3 sentences in the requested language explaining what this result means (string)
-- "action": one sentence in the requested language on what the patient should do (string)
-- "flag": true if needs attention, false if normal (boolean)
+- "status": one of "Normal", "High", "Low", "Critical", "Unknown" — always in English (string)
+- "what_it_measures": 1 short sentence — what does this test check in the body? (string, in requested language)
+- "your_number_context": how far from normal, e.g. "1.6x above upper limit" or "within range" (string, in English)
+- "explanation": 1-2 SHORT sentences — what does this result mean for the patient? No medical jargon. (string, in requested language)
+- "symptoms": list of 2-3 symptoms this abnormal value can cause. Empty list [] if Normal. (array of strings, in requested language)
+- "urgency": one of "Routine", "Soon (1-2 weeks)", "Urgent (today)" — always in English (string)
+- "likely_next_step": 1 sentence — what will the doctor probably do? (string, in requested language)
+- "action": 1 short sentence — what should the patient do right now? (string, in requested language)
+- "flag": true if needs attention, false if Normal (boolean)
+
+Rules:
+- Keep ALL text fields SHORT — max 1-2 sentences each
+- No paragraphs, no long explanations
+- symptoms must be a JSON array, not a string
+- urgency for Normal values must always be "Routine"
 
 Return ONLY the JSON array. No markdown, no code blocks, no extra text."""}
     ]

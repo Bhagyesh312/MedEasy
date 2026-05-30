@@ -16,10 +16,10 @@
 .finding-card.critical { border-left-color: var(--red);    }
 .finding-card.unknown  { border-left-color: var(--muted2); }
 
-/* Header */
+/* ── Header ── */
 .finding-header {
   display: flex; align-items: center; gap: 10px;
-  padding: 12px 14px; cursor: pointer; user-select: none;
+  padding: 11px 14px; cursor: pointer; user-select: none;
 }
 
 .finding-icon-wrap {
@@ -39,6 +39,14 @@
 }
 .finding-value-inline { font-size: 0.75rem; color: var(--muted); }
 
+/* Urgency badge */
+.finding-urgency-badge {
+  display: flex; align-items: center; gap: 3px;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 2px 7px; border-radius: var(--r);
+  white-space: nowrap; flex-shrink: 0;
+}
+
 .finding-badge {
   font-size: 0.65rem; font-weight: 700; padding: 2px 8px;
   border-radius: var(--r); text-transform: uppercase;
@@ -52,14 +60,17 @@
 
 .finding-toggle { color: var(--muted2); display: flex; align-items: center; flex-shrink: 0; }
 
-/* Body */
+/* ── Body ── */
 .finding-body {
-  padding: 0 14px 14px 52px;
-  display: flex; flex-direction: column; gap: 8px;
-  border-top: 1px solid var(--border); padding-top: 10px;
+  padding: 10px 14px 14px 52px;
+  display: flex; flex-direction: column; gap: 9px;
+  border-top: 1px solid var(--border);
 }
 
-.finding-ref-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+/* Reference range row */
+.finding-ref-row {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
 .finding-ref-label {
   font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.4px; color: var(--muted2);
@@ -69,21 +80,60 @@
   background: var(--bg); padding: 1px 8px;
   border-radius: var(--r); border: 1px solid var(--border);
 }
+.finding-context {
+  font-size: 0.72rem; color: var(--muted);
+  font-style: italic;
+}
 
-.finding-explanation { font-size: 0.83rem; color: var(--text2); line-height: 1.65; }
+/* Detail rows (what it measures, next step) */
+.finding-detail-row {
+  display: flex; align-items: flex-start; gap: 7px;
+}
+.detail-icon {
+  color: var(--muted2); flex-shrink: 0; margin-top: 2px;
+}
+.detail-text {
+  font-size: 0.8rem; color: var(--muted); line-height: 1.5;
+}
+.next-step .detail-icon { color: var(--primary); }
+.next-step .detail-text { color: var(--text2); font-weight: 500; }
 
+/* Explanation */
+.finding-explanation {
+  font-size: 0.84rem; color: var(--text2); line-height: 1.6;
+}
+
+/* Symptoms */
+.finding-symptoms {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.symptoms-label {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--muted2);
+}
+.symptoms-list {
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.symptom-tag {
+  font-size: 0.73rem; color: var(--text2);
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 2px 9px; border-radius: var(--r);
+}
+
+/* Action */
 .finding-action {
   display: flex; align-items: flex-start; gap: 7px;
   padding: 8px 10px; background: var(--bg);
   border-radius: var(--r-sm); border: 1px solid var(--border);
 }
-.action-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--primary); flex-shrink: 0; margin-top: 7px;
+.action-arrow { color: var(--primary); flex-shrink: 0; margin-top: 2px; }
+.finding-action span {
+  font-size: 0.8rem; color: var(--text2); font-style: italic; line-height: 1.5;
 }
-.finding-action span { font-size: 0.8rem; color: var(--text2); font-style: italic; line-height: 1.5; }
 
 @media (max-width: 480px) {
   .finding-body { padding-left: 14px; }
   .finding-badge { display: none; }
+  .finding-urgency-badge { display: none; }
 }
