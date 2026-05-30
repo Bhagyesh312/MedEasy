@@ -200,7 +200,12 @@ def analyse():
 
         summary   = generate_summary(findings, lang)
         questions = generate_doctor_questions(findings, lang)
-        save_analysis(report_id, summary, findings, questions)
+
+        try:
+            save_analysis(report_id, summary, findings, questions)
+        except Exception as db_err:
+            print(f"[app] DB save error: {db_err}")
+            # Still return results even if DB save fails
 
         return _ok({
             "report_id": report_id,

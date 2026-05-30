@@ -86,13 +86,20 @@ def save_analysis(report_id, summary, findings, questions):
                 (summary, report_id)
             )
             for f in findings:
+                import json as _json
+                symptoms_json = _json.dumps(f.get("symptoms", []))
                 cur.execute(
                     """INSERT INTO findings
-                       (report_id, test_name, value, reference_range, status, explanation, action, is_flagged)
-                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
-                    (report_id, f.get("test","Unknown"), f.get("value","N/A"),
+                       (report_id, test_name, value, reference_range, status,
+                        explanation, action, is_flagged,
+                        what_it_measures, your_number_context, symptoms, urgency, likely_next_step)
+                       VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (report_id,
+                     f.get("test","Unknown"), f.get("value","N/A"),
                      f.get("reference_range","Not specified"), f.get("status","Unknown"),
-                     f.get("explanation",""), f.get("action",""), bool(f.get("flag",False)))
+                     f.get("explanation",""), f.get("action",""), bool(f.get("flag",False)),
+                     f.get("what_it_measures",""), f.get("your_number_context",""),
+                     symptoms_json, f.get("urgency","Routine"), f.get("likely_next_step",""))
                 )
             for q in questions:
                 cur.execute(

@@ -54,7 +54,7 @@ def _call_with_fallback(messages: list, retries=2) -> str:
                     model=model,
                     messages=messages,
                     temperature=0.2,
-                    max_tokens=4096,
+                    max_tokens=8192,
                 )
                 return response.choices[0].message.content
             except Exception as e:
