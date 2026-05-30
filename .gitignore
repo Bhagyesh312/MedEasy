@@ -25,8 +25,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# ── Vite / React build output ─────────────────────────────────────────────────
-frontend/dist/
+# ── Vite / React build output — uncomment to exclude from git ─────────────────
+# frontend/dist/
 
 # ── Database ──────────────────────────────────────────────────────────────────
 *.db

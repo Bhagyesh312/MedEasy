@@ -17,9 +17,8 @@ from analyser import (analyse_text_report, analyse_scanned_report,
                       generate_summary, generate_doctor_questions, compare_reports)
 from db import (save_report, save_analysis, get_all_reports, get_report_by_id,
                 delete_report, create_user, get_user_by_email, get_user_by_id,
-                get_reports_for_compare, save_otp, verify_otp)
+                get_reports_for_compare)
 from pdf_export import generate_report_pdf
-from email_service import generate_otp, send_otp_email
 
 load_dotenv()
 
@@ -96,52 +95,13 @@ def _valid_password(pw: str) -> str | None:
     return None
 
 
-@app.route("/api/auth/send-otp", methods=["POST"])
-@limiter.limit("5 per hour")          # max 5 OTP requests per IP per hour
-def send_otp():
-    """Step 1 of registration: validate inputs and send OTP."""
-    data     = request.get_json() or {}
-    name     = (data.get("name") or "").strip()
-    email    = (data.get("email") or "").strip().lower()
-    password = data.get("password") or ""
-
-    # Validate all fields before sending OTP
-    err = _valid_name(name)
-    if err: return _err(err)
-    err = _valid_email(email)
-    if err: return _err(err)
-    err = _valid_password(password)
-    if err: return _err(err)
-
-    if get_user_by_email(email):
-        return _err("An account with this email already exists.")
-
-    # Generate and send OTP
-    otp = generate_otp()
-    save_otp(email, otp, purpose="register")
-    sent = send_otp_email(email, otp, name)
-
-    if not sent:
-        return _err(f"Failed to send verification email to {email}. Please check the email address and try again.", 500)
-
-    return _ok({"message": "OTP sent to your email.", "email": email})
-
-
 @app.route("/api/auth/register", methods=["POST"])
 def register():
-    """Step 2 of registration: verify OTP and create account."""
     data     = request.get_json() or {}
     name     = (data.get("name") or "").strip()
     email    = (data.get("email") or "").strip().lower()
     password = data.get("password") or ""
-    otp      = (data.get("otp") or "").strip()
 
-    if not otp:
-        return _err("Please enter the verification code.")
-    if len(otp) != 6 or not otp.isdigit():
-        return _err("Verification code must be 6 digits.")
-
-    # Re-validate inputs
     err = _valid_name(name)
     if err: return _err(err)
     err = _valid_email(email)
@@ -151,9 +111,6 @@ def register():
 
     if get_user_by_email(email):
         return _err("An account with this email already exists.")
-
-    if not verify_otp(email, otp, purpose="register"):
-        return _err("Invalid or expired verification code. Please request a new one.")
 
     try:
         pw_hash = generate_password_hash(password)

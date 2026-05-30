@@ -38,17 +38,8 @@ function friendlyError(err) {
 }
 
 export const api = {
-  async register(name, email, password, otp) {
+  async register(name, email, password) {
     const res = await fetch(`${BASE}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password, otp }),
-    }).catch(e => { throw new Error(friendlyError(e)) })
-    return handleResponse(res)
-  },
-
-  async sendOtp(name, email, password) {
-    const res = await fetch(`${BASE}/auth/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password }),
