@@ -116,7 +116,7 @@ def send_otp():
     sent = send_otp_email(email, otp, name)
 
     if not sent:
-        return _err("Failed to send verification email. Check your email address and try again.", 500)
+        return _err(f"Failed to send verification email to {email}. Please check the email address and try again.", 500)
 
     return _ok({"message": "OTP sent to your email.", "email": email})
 

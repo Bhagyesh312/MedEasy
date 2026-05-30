@@ -113,6 +113,12 @@ If you didn't request this, ignore this email.
             server.login(SMTP_USER, SMTP_PASSWORD)
             server.sendmail(SMTP_USER, to_email, msg.as_string())
         return True
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"[email_service] SMTP Auth failed — check SMTP_USER and SMTP_PASSWORD: {e}")
+        return False
+    except smtplib.SMTPConnectError as e:
+        print(f"[email_service] SMTP Connect failed — check SMTP_HOST and SMTP_PORT: {e}")
+        return False
     except Exception as e:
-        print(f"[email_service] Failed to send OTP to {to_email}: {e}")
+        print(f"[email_service] Failed to send OTP to {to_email}: {type(e).__name__}: {e}")
         return False
