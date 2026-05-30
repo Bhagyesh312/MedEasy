@@ -224,12 +224,14 @@ def analyse():
         })
 
     except Exception as e:
+        import traceback
+        print(f"[app] /api/analyse error: {traceback.format_exc()}")
         err = str(e)
         if "503" in err or "UNAVAILABLE" in err or "high demand" in err:
             return _err("AI is currently overloaded. Please wait 10–15 seconds and try again.", 503)
         if "429" in err or "RESOURCE_EXHAUSTED" in err or "rate_limit" in err.lower():
             return _err("API rate limit reached. Please wait a minute and try again.", 429)
-        return _err(err, 500)
+        return _err(f"Server error: {err}", 500)
     finally:
         try: os.unlink(tmp_path)
         except: pass
