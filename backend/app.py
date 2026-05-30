@@ -57,7 +57,13 @@ def rate_limit_handler(e):
 # ── Health ────────────────────────────────────────────────────────────────────
 @app.route("/api/health")
 def health():
-    return _ok({"status": "ok"})
+    return _ok({
+        "status": "ok",
+        "smtp_user": os.getenv("SMTP_USER", "NOT SET"),
+        "smtp_host": os.getenv("SMTP_HOST", "NOT SET"),
+        "smtp_port": os.getenv("SMTP_PORT", "NOT SET"),
+        "db_host":   os.getenv("DB_HOST", "NOT SET"),
+    })
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
