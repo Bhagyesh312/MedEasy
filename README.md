@@ -1,5 +1,7 @@
 # MedEasy — Medical Report Simplifier
 
+**Live:** https://medeasy-dpe6.onrender.com
+
 > Upload a lab report PDF and get a plain-language explanation with colour-coded results, doctor questions, PDF export, report comparison, and multilingual support.
 
 ---
@@ -158,6 +160,16 @@ Copy `backend/.env.example` to `backend/.env` and fill in:
 | `SMTP_PASSWORD` | Gmail App Password (16 chars, no spaces) |
 | `SMTP_FROM` | Display name + email e.g. `MedEasy <you@gmail.com>` |
 | `PORT` | Port to run on (default: `5000`) |
+
+---
+
+## Deployment
+
+**Live URL:** https://medeasy-dpe6.onrender.com
+
+- Backend hosted on [Render](https://render.com) (Web Service)
+- Database hosted on [Neon](https://neon.tech) (PostgreSQL, Singapore region)
+- Frontend served by Flask from the `frontend/dist` build
 
 ---
 
