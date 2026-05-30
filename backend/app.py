@@ -56,12 +56,14 @@ def rate_limit_handler(e):
 # ── Health ────────────────────────────────────────────────────────────────────
 @app.route("/api/health")
 def health():
+    static_exists = os.path.exists(app.static_folder) if app.static_folder else False
+    index_exists  = os.path.exists(os.path.join(app.static_folder, 'index.html')) if app.static_folder else False
     return _ok({
         "status": "ok",
-        "smtp_user": os.getenv("SMTP_USER", "NOT SET"),
-        "smtp_host": os.getenv("SMTP_HOST", "NOT SET"),
-        "smtp_port": os.getenv("SMTP_PORT", "NOT SET"),
-        "db_host":   os.getenv("DB_HOST", "NOT SET"),
+        "static_folder": app.static_folder,
+        "static_exists": static_exists,
+        "index_exists":  index_exists,
+        "base_dir":      BASE_DIR,
     })
 
 
