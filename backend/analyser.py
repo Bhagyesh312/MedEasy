@@ -1,7 +1,6 @@
 from groq import Groq
 import os
 import json
-import time
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -44,39 +43,33 @@ LANG_INSTRUCTIONS = {
 }
 
 
-def _call_with_fallback(messages: list, retries=2) -> str:
-    """Try each model in MODELS. Retry on rate limit. Raise if all fail."""
+def _call_with_fallback(messages: list, retries=1) -> str:
+    """Try each model in MODELS. On rate limit move to next model immediately."""
     last_error = None
     for model in MODELS:
-        for attempt in range(retries):
-            try:
-                response = client.chat.completions.create(
-                    model=model,
-                    messages=messages,
-                    temperature=0.2,
-                    max_tokens=8192,
-                )
-                return response.choices[0].message.content
-            except Exception as e:
-                err_str = str(e)
-                if "429" in err_str or "rate_limit" in err_str.lower():
-                    if attempt == 0:
-                        time.sleep(5)
-                        continue
-                    last_error = e
-                    break  # try next model
-                elif "503" in err_str or "unavailable" in err_str.lower():
-                    if attempt == 0:
-                        time.sleep(3)
-                        continue
-                    last_error = e
-                    break
-                elif "decommissioned" in err_str.lower() or "400" in err_str:
-                    # Model removed — skip to next immediately, no retry
-                    last_error = e
-                    break
-                else:
-                    raise  # unexpected error — surface it
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                temperature=0.2,
+                max_tokens=8192,
+                max_retries=0,   # disable SDK auto-retry — we handle it ourselves
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            err_str = str(e)
+            last_error = e
+            if "429" in err_str or "rate_limit" in err_str.lower() or "Too Many Requests" in err_str:
+                print(f"[analyser] Rate limit on {model}, trying next model...")
+                continue   # immediately try next model, no sleep
+            elif "decommissioned" in err_str.lower() or ("400" in err_str and "model" in err_str.lower()):
+                print(f"[analyser] Model {model} unavailable, trying next...")
+                continue
+            elif "503" in err_str or "unavailable" in err_str.lower():
+                print(f"[analyser] Model {model} overloaded, trying next...")
+                continue
+            else:
+                raise  # unexpected error — surface it
     raise Exception(f"All models failed. Last error: {last_error}")
 
 
