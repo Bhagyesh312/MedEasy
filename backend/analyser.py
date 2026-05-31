@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+client = Groq(api_key=os.getenv("GROQ_API_KEY"), max_retries=0)
 
 # Fallback model chain — tries each in order if previous fails
 MODELS = [
@@ -53,7 +53,6 @@ def _call_with_fallback(messages: list, retries=1) -> str:
                 messages=messages,
                 temperature=0.2,
                 max_tokens=8192,
-                max_retries=0,   # disable SDK auto-retry — we handle it ourselves
             )
             return response.choices[0].message.content
         except Exception as e:
