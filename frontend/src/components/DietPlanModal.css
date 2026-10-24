@@ -1,0 +1,248 @@
+/* Diet Plan Modal Overlay */
+.diet-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(2px);
+}
+
+/* Diet Plan Modal */
+.diet-modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
+.diet-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px 28px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+.diet-modal-header h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #047857;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.diet-modal-subtitle {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: normal;
+}
+
+.diet-modal-close {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.diet-modal-close:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Modal Content */
+.diet-modal-content {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Main Title */
+.diet-main-title {
+  color: #059669;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #10b981;
+  line-height: 1.3;
+}
+
+/* Day Headers */
+.diet-day-header {
+  color: #10b981;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 28px 0 16px 0;
+  padding-left: 14px;
+  border-left: 4px solid #10b981;
+  line-height: 1.4;
+}
+
+/* Section Headers (like Breakfast, Lunch) */
+.diet-section {
+  margin: 16px 0 10px 0;
+  line-height: 1.6;
+}
+
+.diet-section-title {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.diet-section-details {
+  color: #374151;
+  font-size: 15px;
+}
+
+.diet-section strong {
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Bullet Points */
+.diet-bullet {
+  margin: 10px 0;
+  padding-left: 24px;
+  line-height: 1.8;
+  color: #374151;
+  font-size: 15px;
+}
+
+.diet-bullet strong {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.diet-bullet-simple {
+  margin: 8px 0;
+  padding-left: 24px;
+  line-height: 1.7;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+/* Regular Text */
+.diet-text {
+  margin: 10px 0;
+  line-height: 1.8;
+  color: #374151;
+  font-size: 15px;
+}
+
+.diet-text strong {
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* Separator */
+.diet-separator {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 24px 0;
+}
+
+/* Disclaimer */
+.diet-disclaimer {
+  margin-top: 30px;
+  padding: 16px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.diet-disclaimer svg {
+  color: #d97706;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.diet-disclaimer p {
+  margin: 0;
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+}
+
+/* Scrollbar Styling */
+.diet-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.diet-modal-content::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 4px;
+}
+
+.diet-modal-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.diet-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .diet-modal {
+    max-width: 100%;
+    max-height: 90vh;
+    margin: 10px;
+  }
+
+  .diet-modal-header {
+    padding: 20px;
+  }
+
+  .diet-modal-content {
+    padding: 20px;
+  }
+
+  .diet-header-main {
+    font-size: 20px;
+  }
+
+  .diet-header-sub {
+    font-size: 18px;
+  }
+}

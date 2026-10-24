@@ -1,0 +1,186 @@
+{
+  "iron_deficiency_anemia": {
+    "condition_name": "Iron Deficiency Anemia",
+    "icd10_code": "D50.9",
+    "lab_indicators": {
+      "hemoglobin": "low",
+      "ferritin": "low",
+      "serum_iron": "low",
+      "tibc": "high"
+    },
+    "symptoms": [
+      "Fatigue and weakness",
+      "Pale skin",
+      "Shortness of breath",
+      "Dizziness",
+      "Cold hands and feet",
+      "Brittle nails"
+    ],
+    "dietary_recommendations": [
+      "Iron-rich foods: red meat, lentils, spinach, fortified cereals",
+      "Vitamin C to enhance iron absorption: citrus fruits, tomatoes",
+      "Avoid tea/coffee with meals (reduces iron absorption)"
+    ],
+    "supplements": ["Ferrous sulfate", "Ferrous gluconate"],
+    "severity_levels": {
+      "mild": "Hb 10-11.9 g/dL",
+      "moderate": "Hb 7-9.9 g/dL",
+      "severe": "Hb < 7 g/dL"
+    }
+  },
+  "vitamin_b12_deficiency": {
+    "condition_name": "Vitamin B12 Deficiency",
+    "icd10_code": "E53.8",
+    "lab_indicators": {
+      "vitamin_b12": "low",
+      "hemoglobin": "may be low",
+      "mcv": "high"
+    },
+    "symptoms": [
+      "Fatigue",
+      "Weakness",
+      "Tingling in hands and feet",
+      "Memory problems",
+      "Difficulty walking",
+      "Pale or jaundiced skin"
+    ],
+    "dietary_recommendations": [
+      "B12-rich foods: eggs, dairy, fortified cereals",
+      "For vegetarians: fortified plant milk, nutritional yeast",
+      "Consider B12 injections if absorption issues"
+    ],
+    "supplements": ["Cyanocobalamin", "Methylcobalamin"],
+    "risk_groups": ["Vegetarians", "Vegans", "Elderly", "Gastrointestinal disorders"]
+  },
+  "type_2_diabetes": {
+    "condition_name": "Type 2 Diabetes Mellitus",
+    "icd10_code": "E11",
+    "lab_indicators": {
+      "fasting_glucose": ">=126 mg/dL",
+      "hba1c": ">=6.5%",
+      "random_glucose": ">=200 mg/dL"
+    },
+    "symptoms": [
+      "Increased thirst",
+      "Frequent urination",
+      "Increased hunger",
+      "Unintended weight loss",
+      "Fatigue",
+      "Blurred vision",
+      "Slow-healing sores"
+    ],
+    "dietary_recommendations": [
+      "Low glycemic index foods",
+      "Whole grains over refined grains",
+      "Plenty of vegetables",
+      "Lean proteins",
+      "Limit sugary foods and drinks",
+      "Control portion sizes"
+    ],
+    "exercise_recommendations": [
+      "150 minutes moderate aerobic activity per week",
+      "Strength training 2x per week",
+      "Regular blood sugar monitoring"
+    ]
+  },
+  "hypothyroidism": {
+    "condition_name": "Hypothyroidism",
+    "icd10_code": "E03.9",
+    "lab_indicators": {
+      "tsh": "high",
+      "free_t4": "low or normal",
+      "free_t3": "low or normal"
+    },
+    "symptoms": [
+      "Fatigue",
+      "Weight gain",
+      "Cold intolerance",
+      "Dry skin",
+      "Hair loss",
+      "Depression",
+      "Constipation",
+      "Slow heart rate"
+    ],
+    "dietary_recommendations": [
+      "Iodine-rich foods: iodized salt, seafood, dairy",
+      "Selenium-rich foods: Brazil nuts, tuna, eggs",
+      "Avoid excessive soy if on thyroid medication",
+      "Take thyroid medication on empty stomach"
+    ],
+    "supplements": ["Levothyroxine (prescription)"]
+  },
+  "hypercholesterolemia": {
+    "condition_name": "High Cholesterol",
+    "icd10_code": "E78.0",
+    "lab_indicators": {
+      "total_cholesterol": ">200 mg/dL",
+      "ldl_cholesterol": ">130 mg/dL",
+      "hdl_cholesterol": "<40 mg/dL (men), <50 mg/dL (women)"
+    },
+    "symptoms": [
+      "Usually no symptoms",
+      "May have xanthomas (fatty deposits under skin)",
+      "Increased risk of heart disease"
+    ],
+    "dietary_recommendations": [
+      "Reduce saturated fats",
+      "Eliminate trans fats",
+      "Increase fiber: oats, beans, fruits",
+      "Eat fish rich in omega-3",
+      "Add nuts and seeds",
+      "Use olive oil instead of butter"
+    ],
+    "exercise_recommendations": [
+      "30 minutes daily aerobic exercise",
+      "Walking, jogging, swimming, cycling"
+    ]
+  },
+  "chronic_kidney_disease": {
+    "condition_name": "Chronic Kidney Disease",
+    "icd10_code": "N18.9",
+    "lab_indicators": {
+      "creatinine": "high",
+      "egfr": "low (<60 mL/min)",
+      "bun": "high"
+    },
+    "symptoms": [
+      "Fatigue",
+      "Swelling in legs, ankles, or feet",
+      "Decreased urine output",
+      "Nausea",
+      "Loss of appetite",
+      "Sleep problems"
+    ],
+    "dietary_recommendations": [
+      "Limit protein intake",
+      "Reduce sodium",
+      "Control potassium intake",
+      "Limit phosphorus",
+      "Stay hydrated (but monitor fluid intake)",
+      "Low-protein diet if advanced CKD"
+    ],
+    "risk_factors": ["Diabetes", "High blood pressure", "Family history"]
+  },
+  "vitamin_d_deficiency": {
+    "condition_name": "Vitamin D Deficiency",
+    "icd10_code": "E55.9",
+    "lab_indicators": {
+      "vitamin_d": "<20 ng/mL"
+    },
+    "symptoms": [
+      "Bone pain",
+      "Muscle weakness",
+      "Fatigue",
+      "Mood changes",
+      "Increased infections"
+    ],
+    "dietary_recommendations": [
+      "Fortified milk and cereals",
+      "Fatty fish: salmon, mackerel, tuna",
+      "Egg yolks",
+      "Cheese",
+      "Sun exposure: 10-15 minutes daily"
+    ],
+    "supplements": ["Vitamin D3 (Cholecalciferol)", "Typical dose: 1000-2000 IU daily"]
+  }
+}

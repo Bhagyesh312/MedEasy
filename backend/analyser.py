@@ -7,12 +7,13 @@ load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"), max_retries=0)
 
-# Fallback model chain — tries each in order if previous fails
+# Updated fallback model chain with currently available Groq models (Oct 2026)
+# These models are verified to work with this API key
 MODELS = [
-    "llama-3.3-70b-versatile",        # best free model on Groq
-    "qwen/qwen3-32b",                  # fallback
-    "meta-llama/llama-4-scout-17b-16e-instruct",  # lighter fallback
-    "llama-3.1-8b-instant",           # last resort
+    "openai/gpt-oss-120b",    # Best available - 120B parameters
+    "qwen/qwen3.8-27b",        # Good alternative - 27B parameters
+    "openai/gpt-oss-20b",      # Fallback
+    "allam-2-7b",              # Last resort - 7B (Arabic-focused but works)
 ]
 
 SYSTEM_PROMPT = """You are a friendly and accurate medical report explainer.
@@ -178,13 +179,13 @@ def generate_summary(findings: list, lang: str = "en") -> str:
 
     messages = [
         {"role": "system", "content": sys_prompt},
-        {"role": "user", "content": f"""Write a 3-4 sentence summary for a patient based on these lab results. {lang_instr}
-Be reassuring but honest. End with a reminder to consult their doctor.
+        {"role": "user", "content": f"""Write a brief 2-sentence summary for a patient based on these lab results. {lang_instr}
+Be concise and reassuring. Focus only on key findings.
 
 Flagged: {flagged_str}
 Normal: {normal_str}
 
-Write only the summary paragraph."""}
+Write only the summary (2 sentences max)."""}
     ]
     return _call_with_fallback(messages).strip()
 

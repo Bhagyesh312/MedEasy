@@ -20,6 +20,21 @@ from db import (save_report, save_analysis, get_all_reports, get_report_by_id,
                 get_reports_for_compare)
 from pdf_export import generate_report_pdf
 
+# Import new API blueprints (Phase 4 & 5)
+try:
+    from api_chat import chat_bp
+    CHAT_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️  Chat API not available: {e}")
+    CHAT_AVAILABLE = False
+
+try:
+    from api_generators import gen_bp
+    GENERATORS_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️  Generators API not available: {e}")
+    GENERATORS_AVAILABLE = False
+
 load_dotenv()
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
@@ -55,6 +70,24 @@ limiter = Limiter(
     default_limits=[],          # no global limit — only on specific routes
     storage_uri="memory://",
 )
+
+# ── Register New API Blueprints (Phase 4 & 5) ────────────────────────────────
+if CHAT_AVAILABLE:
+    app.register_blueprint(chat_bp)
+    print("✅ Chat API registered at /api/chat/*")
+
+if GENERATORS_AVAILABLE:
+    app.register_blueprint(gen_bp)
+    print("✅ Generators API registered at /api/generate/*")
+
+if CHAT_AVAILABLE or GENERATORS_AVAILABLE:
+    print("\n🎉 MedEasy AI 2.0 Features Enabled!")
+    if CHAT_AVAILABLE:
+        print("   💬 Conversational Chat - Ready")
+    if GENERATORS_AVAILABLE:
+        print("   🎨 AI Generators - Ready")
+    print()
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 def _err(msg, code=400):

@@ -2,9 +2,10 @@ import { useState } from 'react'
 import {
   ArrowLeft, FileText, CheckCircle2, AlertTriangle, AlertOctagon,
   FlaskConical, MessageSquare, ChevronDown, ChevronUp,
-  Scan, ClipboardList, Download, Loader2
+  Scan, ClipboardList, Download, Loader2, Utensils
 } from 'lucide-react'
 import FindingCard from '../components/FindingCard'
+import DietPlanModal from '../components/DietPlanModal'
 import { useLang } from '../context/LangContext'
 import { api } from '../api'
 import './ResultPage.css'
@@ -14,6 +15,9 @@ export default function ResultPage({ result, onBack }) {
   const [showNormal,    setShowNormal]    = useState(false)
   const [exporting,     setExporting]     = useState(false)
   const [exportError,   setExportError]   = useState('')
+  const [generatingDiet, setGeneratingDiet] = useState(false)
+  const [dietPlan, setDietPlan] = useState(null)
+  const [dietError, setDietError] = useState('')
 
   if (!result) return null
   const { report_id, filename, patient_name, summary, findings, questions, stats, is_scanned } = result
@@ -36,6 +40,43 @@ export default function ResultPage({ result, onBack }) {
     }
   }
 
+  const handleGenerateDietPlan = async () => {
+    setGeneratingDiet(true)
+    setDietError('')
+    
+    try {
+      const response = await fetch('http://localhost:5000/api/generate/diet-plan', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          findings: findings.map(f => ({
+            test_name: f.test,
+            value: f.value,
+            unit: f.unit,
+            status: f.status
+          })),
+          patient_name: patient_name || 'Patient',
+          dietary_preferences: 'vegetarian',
+          duration_days: 7
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate diet plan')
+      }
+
+      const data = await response.json()
+      setDietPlan(data.diet_plan)
+    } catch (err) {
+      setDietError(err.message)
+    } finally {
+      setGeneratingDiet(false)
+    }
+  }
+
   return (
     <div className="result-page">
       {/* Top bar */}
@@ -43,14 +84,27 @@ export default function ResultPage({ result, onBack }) {
         <button className="back-btn" onClick={onBack}>
           <ArrowLeft size={16} /><span>{t.backToUpload}</span>
         </button>
-        <button className="export-btn" onClick={handleExport} disabled={exporting}>
-          {exporting
-            ? <><Loader2 size={15} className="spin-icon" /><span>Exporting...</span></>
-            : <><Download size={15} /><span>{t.exportPDF}</span></>
-          }
-        </button>
+        <div className="topbar-actions">
+          <button 
+            className="diet-btn" 
+            onClick={handleGenerateDietPlan} 
+            disabled={generatingDiet}
+          >
+            {generatingDiet
+              ? <><Loader2 size={15} className="spin-icon" /><span>Generating...</span></>
+              : <><Utensils size={15} /><span>7-Day Diet Plan</span></>
+            }
+          </button>
+          <button className="export-btn" onClick={handleExport} disabled={exporting}>
+            {exporting
+              ? <><Loader2 size={15} className="spin-icon" /><span>Exporting...</span></>
+              : <><Download size={15} /><span>{t.exportPDF}</span></>
+            }
+          </button>
+        </div>
       </div>
       {exportError && <div className="export-error animate-fade-in">{exportError}</div>}
+      {dietError && <div className="export-error animate-fade-in">{dietError}</div>}
 
       {/* Header */}
       <div className="result-header animate-fade-in-up">
@@ -145,9 +199,13 @@ export default function ResultPage({ result, onBack }) {
         </div>
       )}
 
+      {/* Diet Plan Modal - Using Component */}
+      <DietPlanModal dietPlan={dietPlan} onClose={() => setDietPlan(null)} />
+
       <div className="result-footer">
         MedEasy uses Groq AI (Llama 3.3). Always verify results with a qualified medical professional.
       </div>
     </div>
   )
 }
+
