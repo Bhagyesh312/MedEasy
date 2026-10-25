@@ -152,14 +152,17 @@ class VectorStore:
                 
                 results.append(RetrievalResult(
                     chunk=chunk,
-                score=float(score),
-                rank=len(results) + 1
-            ))
+                    score=float(score),
+                    rank=len(results) + 1
+                ))
+                
+                if len(results) >= k:
+                    break
             
-            if len(results) >= k:
-                break
-        
-        return results
+            return results
+        except Exception as e:
+            print(f"⚠️  Error searching vector store: {e}")
+            return []
     
     def save(self) -> None:
         """Save index and chunks to disk."""
