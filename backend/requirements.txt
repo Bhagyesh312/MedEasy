@@ -1,16 +1,16 @@
 # ── Core Flask Dependencies (Production) ─────────────────────────────────────
-flask==3.0.0
-flask-cors==4.0.0
-flask-jwt-extended==4.6.0
-flask-limiter==3.5.0
+Flask==3.0.0
+Flask-Cors==4.0.0
+Flask-JWT-Extended==4.6.0
+Flask-Limiter==3.5.0
 gunicorn==21.2.0
-werkzeug==3.0.1
+Werkzeug==3.0.1
 
 # ── Database ──────────────────────────────────────────────────────────────────
 psycopg2-binary==2.9.9
 
 # ── PDF Processing ────────────────────────────────────────────────────────────
-# Using specific versions with pre-built wheels to avoid build errors
+# Using specific versions with pre-built wheels to avoid build errors on Render
 PyMuPDF==1.21.1
 pdfplumber==0.10.3
 reportlab==4.0.7
@@ -27,17 +27,13 @@ beautifulsoup4==4.12.0
 # ── Data Validation ───────────────────────────────────────────────────────────
 pydantic==2.5.0
 
-# ── Minimal Scientific Computing ──────────────────────────────────────────────
+# ── Scientific Computing (Minimal) ────────────────────────────────────────────
 numpy==1.26.4
 
-# ── Optional: Testing (comment out for production) ────────────────────────────
-# pytest==7.4.0
-# pytest-cov==4.1.0
-
 # ──────────────────────────────────────────────────────────────────────────────
-# PRODUCTION NOTE: Heavy ML libraries removed for Render free tier (512MB limit)
-# Removed: torch, transformers, sentence-transformers, faiss-cpu, scikit-learn
-# These consume 300-400MB+ and cause OOM errors
-# All GenAI features work via Groq API (no local models needed)
-# For full local development with RAG/embeddings: pip install -r requirements-full.txt
+# PRODUCTION NOTE: Optimized for Render free tier (512MB RAM limit)
+# - Heavy ML libraries removed (torch, transformers, sentence-transformers, faiss)
+# - All versions pinned to releases with pre-built wheels
+# - All GenAI features work via Groq API (no local models needed)
+# - For full local development: pip install -r requirements-full.txt
 # ──────────────────────────────────────────────────────────────────────────────
