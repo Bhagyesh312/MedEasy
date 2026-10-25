@@ -10,11 +10,11 @@ werkzeug==3.0.1
 psycopg2-binary==2.9.9
 
 # ── PDF Processing ────────────────────────────────────────────────────────────
-# Using specific version with pre-built wheels to avoid build errors
+# Using specific versions with pre-built wheels to avoid build errors
 PyMuPDF==1.21.1
 pdfplumber==0.10.3
 reportlab==4.0.7
-pillow==10.1.0
+Pillow==10.0.1
 
 # ── AI (Groq API) ─────────────────────────────────────────────────────────────
 groq==0.4.1
