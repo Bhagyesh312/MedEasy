@@ -1,0 +1,36 @@
+# ── Core Flask Dependencies ──────────────────────────────────────────────────
+flask==3.0.0
+flask-cors==4.0.0
+flask-jwt-extended==4.6.0
+flask-limiter==3.5.0
+gunicorn==21.2.0
+werkzeug==3.0.1
+
+# ── Database ──────────────────────────────────────────────────────────────────
+psycopg2-binary==2.9.9
+
+# ── PDF Processing ────────────────────────────────────────────────────────────
+pymupdf==1.23.8
+pdfplumber==0.10.3
+reportlab==4.0.7
+pillow==10.1.0
+
+# ── AI (Groq API) ─────────────────────────────────────────────────────────────
+groq==0.4.1
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-dotenv==1.0.0
+requests==2.31.0
+
+# ── Data Validation ───────────────────────────────────────────────────────────
+pydantic==2.5.0
+
+# ── Minimal Scientific Computing (avoid heavy ML libraries) ───────────────────
+numpy==1.26.4
+
+# NOTE: For production deployment on Render free tier (512MB limit):
+# - Removed: torch, transformers, sentence-transformers, faiss-cpu, scikit-learn
+# - These consume 300-400MB+ of memory
+# - GenAI features work via Groq API (no local models needed)
+# - RAG/Vector store features disabled to save memory
+# - Chat and Generators work without vector embeddings

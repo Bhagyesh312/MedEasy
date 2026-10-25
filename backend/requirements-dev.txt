@@ -1,0 +1,5 @@
+# ── Full Development Requirements (Local Only) ───────────────────────────────
+-r requirements.txt
+
+# All features including ML/AI libraries for local development
+# Use this file for local development: pip install -r requirements-dev.txt

@@ -8,14 +8,26 @@ import numpy as np
 from typing import List, Optional, Tuple
 import pickle
 import os
-from sentence_transformers import SentenceTransformer
+
+# Gracefully handle missing dependencies
+try:
+    from sentence_transformers import SentenceTransformer
+    SENTENCE_TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    SENTENCE_TRANSFORMERS_AVAILABLE = False
+    SentenceTransformer = None
 
 try:
     import faiss
+    FAISS_AVAILABLE = True
 except ImportError:
+    FAISS_AVAILABLE = False
     faiss = None
 
 from .schemas import DocumentChunk, RetrievalResult
+
+# Check if RAG is available
+RAG_AVAILABLE = SENTENCE_TRANSFORMERS_AVAILABLE and FAISS_AVAILABLE
 
 
 class VectorStore:
@@ -28,25 +40,43 @@ class VectorStore:
             model_name: Sentence transformer model to use
             index_path: Path to save/load FAISS index
         """
+        if not RAG_AVAILABLE:
+            print("⚠️  RAG dependencies not available (faiss-cpu, sentence-transformers)")
+            print("   Vector store disabled. Using fallback mode.")
+            self.enabled = False
+            self.model = None
+            self.index = None
+            self.chunks = []
+            return
+        
+        self.enabled = True
         self.model_name = model_name
         self.index_path = index_path or "knowledge_index.faiss"
         self.chunks_path = f"{self.index_path}.chunks.pkl"
         
         # Load embedding model
-        print(f"[VectorStore] Loading embedding model: {model_name}")
-        self.model = SentenceTransformer(model_name)
-        self.dimension = self.model.get_sentence_embedding_dimension()
+        try:
+            print(f"[VectorStore] Loading embedding model: {model_name}")
+            self.model = SentenceTransformer(model_name)
+            self.dimension = self.model.get_sentence_embedding_dimension()
+        except Exception as e:
+            print(f"⚠️  Failed to load embedding model: {e}")
+            self.enabled = False
+            self.model = None
+            self.index = None
+            self.chunks = []
+            return
         
         # Initialize FAISS index
-        if faiss is None:
-            raise ImportError("FAISS not installed. Install with: pip install faiss-cpu")
-        
         self.index: Optional[faiss.Index] = None
         self.chunks: List[DocumentChunk] = []
         
         # Try to load existing index
         if os.path.exists(self.index_path):
-            self.load()
+            try:
+                self.load()
+            except Exception as e:
+                print(f"⚠️  Failed to load existing index: {e}")
     
     def add_chunks(self, chunks: List[DocumentChunk]) -> None:
         """Add document chunks to the vector store.
@@ -54,28 +84,31 @@ class VectorStore:
         Args:
             chunks: List of DocumentChunk objects to add
         """
-        if not chunks:
+        if not self.enabled or not chunks:
             return
         
-        # Generate embeddings
-        print(f"[VectorStore] Generating embeddings for {len(chunks)} chunks...")
-        texts = [chunk.text for chunk in chunks]
-        embeddings = self.model.encode(texts, show_progress_bar=True, convert_to_numpy=True)
-        
-        # Initialize index if needed
-        if self.index is None:
-            self.index = faiss.IndexFlatIP(self.dimension)  # Inner product for cosine similarity
-        
-        # Normalize embeddings for cosine similarity
-        faiss.normalize_L2(embeddings)
-        
-        # Add to index
-        self.index.add(embeddings)
-        
-        # Store chunks
-        self.chunks.extend(chunks)
-        
-        print(f"[VectorStore] Added {len(chunks)} chunks. Total: {len(self.chunks)}")
+        try:
+            # Generate embeddings
+            print(f"[VectorStore] Generating embeddings for {len(chunks)} chunks...")
+            texts = [chunk.text for chunk in chunks]
+            embeddings = self.model.encode(texts, show_progress_bar=True, convert_to_numpy=True)
+            
+            # Initialize index if needed
+            if self.index is None:
+                self.index = faiss.IndexFlatIP(self.dimension)  # Inner product for cosine similarity
+            
+            # Normalize embeddings for cosine similarity
+            faiss.normalize_L2(embeddings)
+            
+            # Add to index
+            self.index.add(embeddings)
+            
+            # Store chunks
+            self.chunks.extend(chunks)
+            
+            print(f"[VectorStore] Added {len(chunks)} chunks. Total: {len(self.chunks)}")
+        except Exception as e:
+            print(f"⚠️  Error adding chunks to vector store: {e}")
     
     def search(
         self, 
@@ -93,31 +126,32 @@ class VectorStore:
         Returns:
             List of RetrievalResult objects ranked by relevance
         """
-        if self.index is None or len(self.chunks) == 0:
+        if not self.enabled or self.index is None or len(self.chunks) == 0:
             return []
         
-        # Generate query embedding
-        query_embedding = self.model.encode([query], convert_to_numpy=True)
-        faiss.normalize_L2(query_embedding)
-        
-        # Search
-        scores, indices = self.index.search(query_embedding, min(k * 2, len(self.chunks)))
-        
-        # Convert to results
-        results = []
-        for score, idx in zip(scores[0], indices[0]):
-            if idx >= len(self.chunks):
-                continue
+        try:
+            # Generate query embedding
+            query_embedding = self.model.encode([query], convert_to_numpy=True)
+            faiss.normalize_L2(query_embedding)
             
-            chunk = self.chunks[idx]
+            # Search
+            scores, indices = self.index.search(query_embedding, min(k * 2, len(self.chunks)))
             
-            # Apply filter if specified
-            if filter_test_names:
-                if not any(test.lower() in [t.lower() for t in chunk.test_names] for test in filter_test_names):
+            # Convert to results
+            results = []
+            for score, idx in zip(scores[0], indices[0]):
+                if idx >= len(self.chunks):
                     continue
-            
-            results.append(RetrievalResult(
-                chunk=chunk,
+                
+                chunk = self.chunks[idx]
+                
+                # Apply filter if specified
+                if filter_test_names:
+                    if not any(test.lower() in [t.lower() for t in chunk.test_names] for test in filter_test_names):
+                        continue
+                
+                results.append(RetrievalResult(
+                    chunk=chunk,
                 score=float(score),
                 rank=len(results) + 1
             ))

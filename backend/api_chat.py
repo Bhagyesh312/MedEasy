@@ -8,8 +8,18 @@ import os
 
 from chat.chat_engine import MedicalChatEngine
 from chat.schemas import ChatRequest
-from rag.retriever import MedicalRetriever
-from rag.generator import GroundedGenerator
+
+# Gracefully handle missing RAG dependencies
+try:
+    from rag.retriever import MedicalRetriever
+    from rag.generator import GroundedGenerator
+    RAG_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️  RAG modules not available: {e}")
+    RAG_AVAILABLE = False
+    MedicalRetriever = None
+    GroundedGenerator = None
+
 from verification.verifier import ResponseVerifier
 from db import get_connection
 
@@ -29,26 +39,31 @@ def get_chat_engine():
         
         db_conn = get_connection()
         
-        # Initialize RAG components (lazy loading)
-        try:
-            retriever = MedicalRetriever()
-            generator = GroundedGenerator(groq_api_key, retriever=retriever)
-            verifier = ResponseVerifier()
-            
-            _chat_engine = MedicalChatEngine(
-                groq_api_key=groq_api_key,
-                db_connection=db_conn,
-                retriever=retriever,
-                generator=generator,
-                verifier=verifier
-            )
-        except Exception as e:
-            print(f"Warning: RAG components not fully initialized: {e}")
-            # Fallback: engine without RAG
-            _chat_engine = MedicalChatEngine(
-                groq_api_key=groq_api_key,
-                db_connection=db_conn
-            )
+        # Initialize RAG components (lazy loading) - optional
+        retriever = None
+        generator = None
+        verifier = None
+        
+        if RAG_AVAILABLE:
+            try:
+                retriever = MedicalRetriever()
+                generator = GroundedGenerator(groq_api_key, retriever=retriever)
+                verifier = ResponseVerifier()
+                print("✅ Chat engine initialized with RAG support")
+            except Exception as e:
+                print(f"⚠️  RAG components not fully initialized: {e}")
+                print("   Chat will work without RAG (Groq API only)")
+        else:
+            print("⚠️  RAG modules not available - using Groq API only")
+        
+        # Create chat engine (works with or without RAG)
+        _chat_engine = MedicalChatEngine(
+            groq_api_key=groq_api_key,
+            db_connection=db_conn,
+            retriever=retriever,
+            generator=generator,
+            verifier=verifier
+        )
     
     return _chat_engine
 
